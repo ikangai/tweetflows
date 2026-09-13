@@ -1,0 +1,130 @@
+{
+  "schema_version": "1.0",
+  "campaign_id": "fixture-smoke-v1",
+  "purpose": "implementation_acceptance",
+  "mode": "fixture",
+  "methods": [
+    "central_active_v1",
+    "intent_local_v1",
+    "referral_local_v1"
+  ],
+  "benchmark": {
+    "adapter": "synthetic_fixtures",
+    "revision": "fixture-v1",
+    "task_ids": ["direct_update", "late_conversion"],
+    "split": "development",
+    "agent_count": 8
+  },
+  "regimes": [
+    {"id": "full_stable", "visibility": "full", "availability": "stable"},
+    {"id": "partial_stable", "visibility": "partial", "availability": "stable"},
+    {"id": "full_churn", "visibility": "full", "availability": "churn"},
+    {"id": "partial_churn", "visibility": "partial", "availability": "churn"}
+  ],
+  "replicate_seeds": [11, 22, 33],
+  "planning": {
+    "expansion": "cartesian",
+    "expected_episodes": 72,
+    "expected_pairs": 24
+  },
+  "visibility": {
+    "initial_profile_count_partial": 2,
+    "initial_profile_count_full": 8,
+    "contact_graph": "fixture_connected_v1",
+    "contacts_page_size": 2,
+    "id_generation": "opaque_seeded",
+    "initial_local_neighbor_profiles": false
+  },
+  "discovery": {
+    "max_contacts_per_search": 12,
+    "max_contacts_per_root": 32,
+    "max_hops_from_search_seed": 3,
+    "referral_fanout": 2,
+    "min_match": 0.5,
+    "availability_ttl_ticks": 5,
+    "freshness_horizon_ticks": 50,
+    "candidate_weights": {"match": 0.6, "expertise": 0.3, "freshness": 0.1},
+    "relay_weights": {"match": 0.4, "sociability": 0.5, "freshness": 0.1},
+    "fallback": "remaining_legal_frontier"
+  },
+  "reputation": {
+    "history": "fixture_history_v1",
+    "update_during_episode": false,
+    "cross_episode_memory": false,
+    "prior_successes": 1,
+    "prior_failures": 1
+  },
+  "execution": {
+    "max_attempts_per_task": 3,
+    "max_tasks_per_root": 4,
+    "max_child_depth": 2,
+    "max_logical_inflight": 2,
+    "lease_ticks": 30,
+    "pause_parent_lease_while_waiting": true,
+    "root_deadline_ticks": 300
+  },
+  "budget": {
+    "unit": "synthetic_microcredit",
+    "per_episode_limit": 12000,
+    "campaign_limit": 864000,
+    "max_model_calls_per_episode": 100,
+    "max_total_tool_calls_per_episode": 100,
+    "tariff_id": "fixture_tariff_v1",
+    "tariff": {
+      "model_call_fixed": 20,
+      "input_token": 1,
+      "output_token_excluding_reasoning": 2,
+      "reasoning_token": 2,
+      "describe": 3,
+      "contacts": 5,
+      "probe": 2,
+      "offer_request": 2,
+      "referral_forward": 2,
+      "status": 1,
+      "sandbox_tool": 10,
+      "operational_verification": 10
+    }
+  },
+  "model": {
+    "adapter": "deterministic_mock",
+    "model_id": "fixture-model-v1",
+    "network_enabled": false,
+    "max_output_tokens": 256,
+    "max_reasoning_tokens": 0
+  },
+  "time_model": {
+    "id": "fixed_duration_v1",
+    "duration_ticks": {
+      "model_call": 5,
+      "describe": 1,
+      "contacts": 1,
+      "probe": 1,
+      "offer_request": 1,
+      "referral_forward": 1,
+      "status": 1,
+      "sandbox_tool": 2,
+      "operational_verification": 2,
+      "message_delivery": 1,
+      "wait": 1
+    },
+    "same_time_order": ["availability", "expiry", "completion", "decision"]
+  },
+  "faults": {
+    "availability_trace": "fixture_churn_v1",
+    "message_duplicates": false,
+    "message_delays": false,
+    "post_award_stress": false
+  },
+  "verification": {
+    "operational": "fixture_public_checks_v1",
+    "private_grader": "fixture_private_grader_v1",
+    "grader_visible_during_episode": false
+  },
+  "analysis": {
+    "confirmatory": false,
+    "primary_metric": "budgeted_independent_success",
+    "primary_pair": ["referral_local_v1", "central_active_v1"],
+    "cluster_unit": "template_id",
+    "confidence_level": 0.95
+  }
+}

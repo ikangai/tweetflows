@@ -1,0 +1,721 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/ikangai/tweetflows/schemas/campaign-v1",
+  "title": "Tweetflows fixture planning campaign v1",
+  "description": "Planning contract only. Acceptance does not imply an executable runtime manifest.",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+    },
+    "purpose": {
+      "const": "implementation_acceptance"
+    },
+    "mode": {
+      "const": "fixture"
+    },
+    "methods": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "central_active_v1",
+          "intent_local_v1",
+          "referral_local_v1"
+        ]
+      },
+      "minItems": 2,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "benchmark": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "const": "synthetic_fixtures"
+        },
+        "revision": {
+          "const": "fixture-v1"
+        },
+        "task_ids": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "direct_update",
+              "late_conversion"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "split": {
+          "const": "development"
+        },
+        "agent_count": {
+          "const": 8
+        }
+      },
+      "required": [
+        "adapter",
+        "revision",
+        "task_ids",
+        "split",
+        "agent_count"
+      ],
+      "additionalProperties": false
+    },
+    "regimes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$"
+          },
+          "visibility": {
+            "enum": [
+              "full",
+              "partial"
+            ]
+          },
+          "availability": {
+            "enum": [
+              "stable",
+              "churn"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "visibility",
+          "availability"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 4,
+      "uniqueItems": true
+    },
+    "replicate_seeds": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 0,
+        "maximum": 4294967295
+      },
+      "minItems": 1,
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "planning": {
+      "type": "object",
+      "properties": {
+        "expansion": {
+          "const": "cartesian"
+        },
+        "expected_episodes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2400
+        },
+        "expected_pairs": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 800
+        }
+      },
+      "required": [
+        "expansion",
+        "expected_episodes",
+        "expected_pairs"
+      ],
+      "additionalProperties": false
+    },
+    "visibility": {
+      "type": "object",
+      "properties": {
+        "initial_profile_count_partial": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7
+        },
+        "initial_profile_count_full": {
+          "const": 8
+        },
+        "contact_graph": {
+          "const": "fixture_connected_v1"
+        },
+        "contacts_page_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "id_generation": {
+          "const": "opaque_seeded"
+        },
+        "initial_local_neighbor_profiles": {
+          "const": false
+        }
+      },
+      "required": [
+        "initial_profile_count_partial",
+        "initial_profile_count_full",
+        "contact_graph",
+        "contacts_page_size",
+        "id_generation",
+        "initial_local_neighbor_profiles"
+      ],
+      "additionalProperties": false
+    },
+    "discovery": {
+      "type": "object",
+      "properties": {
+        "max_contacts_per_search": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "max_contacts_per_root": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "max_hops_from_search_seed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7
+        },
+        "referral_fanout": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "min_match": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "availability_ttl_ticks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "freshness_horizon_ticks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "candidate_weights": {
+          "type": "object",
+          "properties": {
+            "match": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "expertise": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "freshness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "match",
+            "expertise",
+            "freshness"
+          ],
+          "additionalProperties": false
+        },
+        "relay_weights": {
+          "type": "object",
+          "properties": {
+            "match": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "sociability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "freshness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "match",
+            "sociability",
+            "freshness"
+          ],
+          "additionalProperties": false
+        },
+        "fallback": {
+          "const": "remaining_legal_frontier"
+        }
+      },
+      "required": [
+        "max_contacts_per_search",
+        "max_contacts_per_root",
+        "max_hops_from_search_seed",
+        "referral_fanout",
+        "min_match",
+        "availability_ttl_ticks",
+        "freshness_horizon_ticks",
+        "candidate_weights",
+        "relay_weights",
+        "fallback"
+      ],
+      "additionalProperties": false
+    },
+    "reputation": {
+      "type": "object",
+      "properties": {
+        "history": {
+          "const": "fixture_history_v1"
+        },
+        "update_during_episode": {
+          "const": false
+        },
+        "cross_episode_memory": {
+          "const": false
+        },
+        "prior_successes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "prior_failures": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        }
+      },
+      "required": [
+        "history",
+        "update_during_episode",
+        "cross_episode_memory",
+        "prior_successes",
+        "prior_failures"
+      ],
+      "additionalProperties": false
+    },
+    "execution": {
+      "type": "object",
+      "properties": {
+        "max_attempts_per_task": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "max_tasks_per_root": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "max_child_depth": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 99
+        },
+        "max_logical_inflight": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "lease_ticks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "pause_parent_lease_while_waiting": {
+          "const": true
+        },
+        "root_deadline_ticks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        }
+      },
+      "required": [
+        "max_attempts_per_task",
+        "max_tasks_per_root",
+        "max_child_depth",
+        "max_logical_inflight",
+        "lease_ticks",
+        "pause_parent_lease_while_waiting",
+        "root_deadline_ticks"
+      ],
+      "additionalProperties": false
+    },
+    "budget": {
+      "type": "object",
+      "properties": {
+        "unit": {
+          "const": "synthetic_microcredit"
+        },
+        "per_episode_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "campaign_limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000000000
+        },
+        "max_model_calls_per_episode": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "max_total_tool_calls_per_episode": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "tariff_id": {
+          "const": "fixture_tariff_v1"
+        },
+        "tariff": {
+          "type": "object",
+          "properties": {
+            "model_call_fixed": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "input_token": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "output_token_excluding_reasoning": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "reasoning_token": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "describe": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "contacts": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "probe": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "offer_request": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "referral_forward": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "status": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "sandbox_tool": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "operational_verification": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            }
+          },
+          "required": [
+            "model_call_fixed",
+            "input_token",
+            "output_token_excluding_reasoning",
+            "reasoning_token",
+            "describe",
+            "contacts",
+            "probe",
+            "offer_request",
+            "referral_forward",
+            "status",
+            "sandbox_tool",
+            "operational_verification"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "unit",
+        "per_episode_limit",
+        "campaign_limit",
+        "max_model_calls_per_episode",
+        "max_total_tool_calls_per_episode",
+        "tariff_id",
+        "tariff"
+      ],
+      "additionalProperties": false
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "adapter": {
+          "const": "deterministic_mock"
+        },
+        "model_id": {
+          "const": "fixture-model-v1"
+        },
+        "network_enabled": {
+          "const": false
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000000000
+        },
+        "max_reasoning_tokens": {
+          "const": 0
+        }
+      },
+      "required": [
+        "adapter",
+        "model_id",
+        "network_enabled",
+        "max_output_tokens",
+        "max_reasoning_tokens"
+      ],
+      "additionalProperties": false
+    },
+    "time_model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "const": "fixed_duration_v1"
+        },
+        "duration_ticks": {
+          "type": "object",
+          "properties": {
+            "model_call": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "describe": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "contacts": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "probe": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "offer_request": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "referral_forward": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "status": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "sandbox_tool": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "operational_verification": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "message_delivery": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            },
+            "wait": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000000000
+            }
+          },
+          "required": [
+            "model_call",
+            "describe",
+            "contacts",
+            "probe",
+            "offer_request",
+            "referral_forward",
+            "status",
+            "sandbox_tool",
+            "operational_verification",
+            "message_delivery",
+            "wait"
+          ],
+          "additionalProperties": false
+        },
+        "same_time_order": {
+          "const": [
+            "availability",
+            "expiry",
+            "completion",
+            "decision"
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "duration_ticks",
+        "same_time_order"
+      ],
+      "additionalProperties": false
+    },
+    "faults": {
+      "type": "object",
+      "properties": {
+        "availability_trace": {
+          "const": "fixture_churn_v1"
+        },
+        "message_duplicates": {
+          "const": false
+        },
+        "message_delays": {
+          "const": false
+        },
+        "post_award_stress": {
+          "const": false
+        }
+      },
+      "required": [
+        "availability_trace",
+        "message_duplicates",
+        "message_delays",
+        "post_award_stress"
+      ],
+      "additionalProperties": false
+    },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "operational": {
+          "const": "fixture_public_checks_v1"
+        },
+        "private_grader": {
+          "const": "fixture_private_grader_v1"
+        },
+        "grader_visible_during_episode": {
+          "const": false
+        }
+      },
+      "required": [
+        "operational",
+        "private_grader",
+        "grader_visible_during_episode"
+      ],
+      "additionalProperties": false
+    },
+    "analysis": {
+      "type": "object",
+      "properties": {
+        "confirmatory": {
+          "const": false
+        },
+        "primary_metric": {
+          "const": "budgeted_independent_success"
+        },
+        "primary_pair": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "central_active_v1",
+              "intent_local_v1",
+              "referral_local_v1"
+            ]
+          },
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true
+        },
+        "cluster_unit": {
+          "const": "template_id"
+        },
+        "confidence_level": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "exclusiveMaximum": 1
+        }
+      },
+      "required": [
+        "confirmatory",
+        "primary_metric",
+        "primary_pair",
+        "cluster_unit",
+        "confidence_level"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "campaign_id",
+    "purpose",
+    "mode",
+    "methods",
+    "benchmark",
+    "regimes",
+    "replicate_seeds",
+    "planning",
+    "visibility",
+    "discovery",
+    "reputation",
+    "execution",
+    "budget",
+    "model",
+    "time_model",
+    "faults",
+    "verification",
+    "analysis"
+  ],
+  "additionalProperties": false
+}

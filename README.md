@@ -6,9 +6,26 @@ Tweetflows is a research project on budget-aware agent discovery, referral, and 
 
 ## Status
 
-This repository currently contains the research report, paper proposal, technical specification, and an example experiment configuration. The runtime, command-line interface, benchmark adapters, and tests have **not yet been implemented**. No experimental results are available.
+The first implementation provides configuration validation and deterministic experiment planning, alongside the research report, paper proposal, and technical specification. The execution runtime, routing policies, and benchmark adapters have **not yet been implemented**. No experimental results are available.
 
 The README is in English; the research documents and implementation specification are in German.
+
+## Try the planner
+
+Install [uv](https://docs.astral.sh/uv/getting-started/installation/), then run from the repository root:
+
+```sh
+uv sync --locked
+uv run --locked agentflow validate configs/fixture-smoke.json
+uv run --locked agentflow plan configs/fixture-smoke.json --output plan.json
+uv run --locked pytest
+```
+
+The project pins Python 3.12.12 in `.python-version` and dependencies in `uv.lock`. The first installation may download Python and packages. Validation and planning themselves run offline and need no credentials.
+
+`plan` produces 72 episode descriptions in 24 comparison groups. Each group shares scenario seeds and infrastructure settings across the three methods. Existing output files are never overwritten. Omit `--output` to emit JSON to standard output.
+
+Only fixture planning is supported. The plan explicitly has `execution_ready: false`: referenced snapshots, policies, and graders are not implemented yet. It is not the fully resolved runtime manifest required for a research campaign. `run`, `resume`, and evaluation commands remain planned.
 
 ## Research question
 
@@ -32,6 +49,8 @@ All policies use the same workers, tool permissions, information-access rules, c
 | [Paper proposal](docs/expose.md) | Research questions, hypotheses, experimental design, and proposed contributions. |
 | [Technical specification](docs/specification.md) | Architecture, contracts, state transitions, routing policies, budgets, and 24 acceptance criteria. |
 | [Fixture campaign](configs/fixture-smoke.json) | Example configuration for 72 planned deterministic episodes without external model calls. |
+| [Planning contract](docs/planning.md) | Supported configuration, identifiers, budget interpretation, and reproducibility boundaries. |
+| [WorkBench audit](docs/workbench-provenance.md) | Pinned upstream source inspection and remaining adapter acceptance requirements. |
 
 For implementation, start with the technical specification. Its requirements are normative for the prototype; the other documents explain the scientific motivation and evaluation plan.
 
@@ -61,7 +80,7 @@ Deterministic fixtures come first, followed by a WorkBench adapter subject to co
 
 ## Implementation roadmap
 
-All milestones below are planned.
+M0 is in progress: the package, lockfile, campaign schema, planner, and source audit are available. Execution message schemas, complete runtime manifests, and executed WorkBench compatibility checks remain open. M1–M6 are planned.
 
 | Milestone | Deliverable |
 |---|---|
@@ -73,7 +92,7 @@ All milestones below are planned.
 | M5 — Experiment tooling | Campaign planning, resume, exports, paired comparisons, and statistical analysis. |
 | M6 — Pilot | Development-task runs, cost and grader audits, and a frozen main-study configuration. |
 
-Detailed dependencies and acceptance criteria are in the [specification](docs/specification.md). The example campaign defines 3 policies × 2 tasks × 4 regimes × 3 seeds = **72 episodes**. It uses synthetic credits and is not an executable benchmark yet.
+Detailed dependencies and acceptance criteria are in the [specification](docs/specification.md). The example campaign defines 3 policies × 2 tasks × 4 regimes × 3 seeds = **72 episodes**. Planning acceptance criterion T21 is covered by automated tests; execution criteria remain open. The campaign uses synthetic credits and is not an executable benchmark yet.
 
 ## Origins and scope
 

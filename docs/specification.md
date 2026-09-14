@@ -4,7 +4,7 @@
 
 **Version:** 0.1.0. **Status:** Implementierungsgrundlage für den Forschungsprototyp. **Stand:** 13. September 2026.
 
-Diese Spezifikation konkretisiert das Exposé *Selektive Agentenvermittlung bei unvollständiger Fähigkeitssicht und wechselnder Verfügbarkeit*. Sie legt Architektur, Zustandsübergänge, Informationszugänge, Auswahlverfahren, Kostenabrechnung und Abnahmekriterien fest. „MUSS“ bezeichnet eine verpflichtende Anforderung; „SOLL“ eine begründet abweichbare Empfehlung. Die hier benannten Schnittstellen und Befehle beschreiben den Zielzustand. `validate` und `plan` sind für Fixture-Konfigurationen implementiert; die Laufzeit und übrigen Befehle stehen noch aus. Der aktuelle Umfang ist im [Planungsvertrag](planning.md) dokumentiert.
+Diese Spezifikation konkretisiert das Exposé *Selektive Agentenvermittlung bei unvollständiger Fähigkeitssicht und wechselnder Verfügbarkeit*. Sie legt Architektur, Zustandsübergänge, Informationszugänge, Auswahlverfahren, Kostenabrechnung und Abnahmekriterien fest. „MUSS“ bezeichnet eine verpflichtende Anforderung; „SOLL“ eine begründet abweichbare Empfehlung. Die hier benannten Schnittstellen und Befehle beschreiben den Zielzustand. `validate`, `plan` und ein erster `run`-Pfad mit Wiederaufnahme sind implementiert. Der [Ausführungsleitfaden](execution.md) grenzt den Engineering-Prototyp von den noch offenen Forschungsanforderungen ab. Der aktuelle Umfang ist im [Planungsvertrag](planning.md) dokumentiert.
 
 Das System führt gepaarte Versuche mit identischen Aufgaben, Fähigkeiten, Ausgangsinformationen und Störungsspuren durch. Es vergleicht `central_active_v1`, `intent_local_v1` und `referral_local_v1`. Primäres Ergebnis ist die unabhängig geprüfte Zielerreichung innerhalb eines festgelegten Gesamtbudgets und einer simulierten Frist. Alle drei Verfahren verwenden dieselben Worker, Werkzeuge, Vergaberegeln und Prüfkomponenten.
 
@@ -326,7 +326,7 @@ agentflow analyze campaign-id --analysis-plan analysis.json
 agentflow export campaign-id --output artifact-directory
 ```
 
-`validate` und `plan` sind für die Fixture-Planung verfügbar; die übrigen Befehle sind zukünftige Interfaces. `plan` führt keine Modellaufrufe aus. Ein Live-Aufruf benötigt ein vollständig aufgelöstes Modell- und Tarifmanifest sowie ein explizites Kampagnenlimit; der Batch läuft innerhalb dieses Limits. Die Forschungsmanifestierung ist keine Genehmigung für produktive Seiteneffekte. Fixture-Modus benötigt keine Anbieterzugänge.
+`validate`, `plan` und `run` sind im Engineering-Prototyp verfügbar; Wiederaufnahme erfolgt derzeit über `run --resume`. Die übrigen Befehle bleiben zukünftige Interfaces. `plan` führt keine Modellaufrufe aus. Ein Live-Aufruf benötigt ein vollständig aufgelöstes Modell- und Tarifmanifest sowie ein explizites Kampagnenlimit; der Batch läuft innerhalb dieses Limits. Die Forschungsmanifestierung ist keine Genehmigung für produktive Seiteneffekte. Fixture-Modus benötigt keine Anbieterzugänge.
 
 ### 13.2 Ausgabevertrag
 

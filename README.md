@@ -6,7 +6,7 @@ Tweetflows is a research project on budget-aware agent discovery, referral, and 
 
 ## Status
 
-The first implementation provides configuration validation and deterministic experiment planning, alongside the research report, paper proposal, and technical specification. The execution runtime, routing policies, and benchmark adapters have **not yet been implemented**. No experimental results are available.
+The prototype now validates, plans, and executes controlled agent tasks, with discovery, delegation, tool use, persistent budgets, and independent grading. Deterministic fixture runs are tested; an opt-in live model adapter is available. WorkBench integration and the scientific evaluation are still pending.
 
 The README is in English; the research documents and implementation specification are in German.
 
@@ -25,7 +25,13 @@ The project pins Python 3.12.12 in `.python-version` and dependencies in `uv.loc
 
 `plan` produces 72 episode descriptions in 24 comparison groups. Each group shares scenario seeds and infrastructure settings across the three methods. Existing output files are never overwritten. Omit `--output` to emit JSON to standard output.
 
-Only fixture planning is supported. The plan explicitly has `execution_ready: false`: referenced snapshots, policies, and graders are not implemented yet. It is not the fully resolved runtime manifest required for a research campaign. `run`, `resume`, and evaluation commands remain planned.
+Run the deterministic execution campaign:
+
+```sh
+uv run --locked agentflow run configs/fixture-smoke.json --output artifacts/fixture-001
+```
+
+Add `--resume` to continue that output directory. The execution manifest records the prototype profile and worker identity. For live model settings, output files, recovery behavior, and research limitations, see the [execution guide](docs/execution.md). `plan` itself remains an offline design artifact, not a main-study execution manifest.
 
 ## Research question
 
@@ -49,6 +55,7 @@ All policies use the same workers, tool permissions, information-access rules, c
 | [Paper proposal](docs/expose.md) | Research questions, hypotheses, experimental design, and proposed contributions. |
 | [Technical specification](docs/specification.md) | Architecture, contracts, state transitions, routing policies, budgets, and 24 acceptance criteria. |
 | [Fixture campaign](configs/fixture-smoke.json) | Example configuration for 72 planned deterministic episodes without external model calls. |
+| [Execution guide](docs/execution.md) | Runnable fixtures, live model setup, persistence, accounting, and known limits. |
 | [Planning contract](docs/planning.md) | Supported configuration, identifiers, budget interpretation, and reproducibility boundaries. |
 | [WorkBench audit](docs/workbench-provenance.md) | Pinned upstream source inspection and remaining adapter acceptance requirements. |
 
@@ -80,7 +87,7 @@ Deterministic fixtures come first, followed by a WorkBench adapter subject to co
 
 ## Implementation roadmap
 
-M0 is in progress: the package, lockfile, campaign schema, planner, and source audit are available. Execution message schemas, complete runtime manifests, and executed WorkBench compatibility checks remain open. M1–M6 are planned.
+An executable engineering slice spans M1–M5: task execution, local discovery, delegation, model transport, persistence, and exports. Full message contracts, asynchronous transport, benchmark integration, and research-grade accounting/evaluation remain open; milestone completion is tracked against the specification, not inferred from fixture success.
 
 | Milestone | Deliverable |
 |---|---|
@@ -92,7 +99,7 @@ M0 is in progress: the package, lockfile, campaign schema, planner, and source a
 | M5 — Experiment tooling | Campaign planning, resume, exports, paired comparisons, and statistical analysis. |
 | M6 — Pilot | Development-task runs, cost and grader audits, and a frozen main-study configuration. |
 
-Detailed dependencies and acceptance criteria are in the [specification](docs/specification.md). The example campaign defines 3 policies × 2 tasks × 4 regimes × 3 seeds = **72 episodes**. Planning acceptance criterion T21 is covered by automated tests; execution criteria remain open. The campaign uses synthetic credits and is not an executable benchmark yet.
+Detailed dependencies and acceptance criteria are in the [specification](docs/specification.md). The example campaign defines 3 policies × 2 tasks × 4 regimes × 3 seeds = **72 episodes**. Planning and selected execution/failure contracts have automated coverage. The campaign executes synthetic tasks and uses experimental credits; it is not a research benchmark result.
 
 ## Origins and scope
 

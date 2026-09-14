@@ -77,9 +77,8 @@ def plan_campaign(value: object) -> dict:
         "configuration": config,
         "execution_ready": False,
         "unresolved_execution_artifacts": [
-            "fixture snapshots and tool implementations",
-            "contact graph and historical evidence contents",
-            "runtime, routing policies, worker and grader implementations",
+            "select an execution profile with agentflow run",
+            "main-study benchmark, provider tariffs, and evaluation remain unvalidated",
         ],
         "episode_count": len(episodes),
         "pair_count": len({e["pair_id"] for e in episodes}),

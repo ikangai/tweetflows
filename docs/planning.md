@@ -1,6 +1,6 @@
 # Fixture planning contract
 
-Version 1.0 supports validation and design expansion only. It implements the planning requirement T21 from the [technical specification](specification.md). Runtime acceptance requirements are not covered by successful planning.
+The planning interface supports validation and design expansion. Controlled execution is provided separately by `run`; see the [execution guide](execution.md). It implements the planning requirement T21 from the [technical specification](specification.md). Runtime acceptance requirements are not covered by successful planning.
 
 ## Input
 
@@ -16,9 +16,9 @@ The plan includes the normalized configuration, schema hash, planner source hash
 
 Each `pair_id` includes the task, variant, regime, replicate seed, and shared infrastructure configuration. It excludes the method, campaign label, selected task/method lists, analysis settings, and aggregate campaign limit. Changing a per-episode budget changes the pair; reducing the method set preserves remaining episode identities. `episode_id` adds the method to the pair. IDs are scoped to their campaign storage; identical scientific designs may intentionally have identical IDs in different campaigns.
 
-Independent named seed streams are derived for scenarios, topology, availability, operation durations, tie-breaking, and model sampling. All methods in a comparison group receive the same initial stream seeds. Stable regimes have no availability trace, even when a churn trace is configured for other regimes. Scenario contents and runtime event ordering still require implementation.
+Independent named seed streams are derived for scenarios, topology, availability, operation durations, tie-breaking, and model sampling. All methods in a comparison group receive the same initial stream seeds. Stable regimes have no availability trace, even when a churn trace is configured for other regimes. The engineering execution profile resolves fixture contents and serialized event ordering.
 
-Hashes of reference names do not establish the contents of snapshots or historical evidence. The output therefore records `execution_ready: false` and lists missing execution artifacts. It is a planning artifact, not the final `manifest.resolved.json` specified for a runnable study. Installed package versions are locked in `uv.lock`; a future runtime manifest must additionally record the actual environment, execution code, and resource-content hashes.
+Hashes of reference names do not establish the contents of snapshots or historical evidence. The planning output therefore records `execution_ready: false`; `run` resolves and hashes the engineering execution profile separately. It is a planning artifact, not the final `manifest.resolved.json` specified for a runnable study. Installed package versions are locked in `uv.lock`; a future runtime manifest must additionally record the actual environment, execution code, and resource-content hashes.
 
 ## Budgets
 
@@ -28,4 +28,4 @@ Hashes of reference names do not establish the contents of snapshots or historic
 
 Tests cover the 72-episode design, complete method groups, deterministic normalization, paired seeds, budget-sensitive IDs, inactive stable-regime faults, invalid input, offline CLI operation, and protection of existing output files.
 
-M0 still requires execution message contracts and complete runtime artifact resolution. The [WorkBench source audit](workbench-provenance.md) records the candidate source, license, and state-model implications; actual adapter compatibility and T22 are pending. The next runtime increment is the transactional task/attempt journal and budget reservation model from M1.
+M0 still requires execution message contracts and complete runtime artifact resolution. The [WorkBench source audit](workbench-provenance.md) records the candidate source, license, and state-model implications; actual adapter compatibility and T22 are pending. The engineering execution profile now provides a transactional state journal and reservations; remaining study requirements are listed in the [execution guide](execution.md).
